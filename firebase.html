@@ -1,0 +1,49 @@
+<!--- AUTHOR: DE RAMOS, Jan Crissel O.
+	  SECTION: CMSC 128 AB-2L
+	  DESCRIPTION: Note Pad Alpha
+ --->
+ 
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <link rel='stylesheet' type='text/css' href='/resources/tutorial/css/example.css'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">    
+  </head>
+  
+  <body>
+    <div class="row" id='inputs'></div>
+		<input type='text' id='titleInput' placeholder='Title' required=true style="width:500px"><br>
+		<form class="col s12">
+			<div class="row">    
+				<div class="input-field col s12">
+					<input type='text' id='textInput' placeholder='Text' required=true>
+   				</div>
+    		</div>
+    	</form>
+    </div>
+	<script>
+		  var myDataRef = new Firebase('https://y2om2au5jv8.firebaseio-demo.com/');
+		  $('#textInput').keypress(function (e) {
+            if (e.keyCode == 13 && $('#titleInput').val() != '' && $('#textInput').val() != '') {
+		      var title = $('#titleInput').val();
+		      var text = $('#textInput').val();
+		      myDataRef.push({title: title, text: text});
+		      $('#titleInput').val('');
+		      $('#textInput').val('');
+		    }
+		  });
+		  
+		  myDataRef.on('child_added', function(snapshot) {
+		    var note = snapshot.val();
+		    displayChatMessage(note.title, note.text);
+		  });
+		  function displayChatMessage(title, text) {
+		    $('<div/>').append($('<em/>'+title+"<br/>")).appendTo($('#inputs'));
+		    $('<em/>').append(text).appendTo($('#inputs'));
+		    $('#inputs')[0].scrollTop = $('#inputs')[0].scrollHeight;
+		  };
+    </script>
+  </body>
+</html>
