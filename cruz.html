@@ -1,0 +1,59 @@
+<!-- 
+AUTHOR: Cruz, Xyrus Marvin Z.
+SECTION: CMSC 128 AB-2L
+DESCRIPTION: Note Pad Alpha
+-->
+ 
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>FIREBASE</title>
+  	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <link rel='stylesheet' type='text/css' href='/resources/tutorial/css/example.css'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">    
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+  </head>
+  
+  <body style="text-align:center">
+    <div class="row" id='inputs'></div>
+		<form class="col s12">
+			<div class="row" style="margin-left:40%">
+			<div class="input-field col s4" style="width:30%">
+				<input type="text" id="titleInput" required=true>
+				<label for="titleInput" >Title</label><br>
+			</div>
+			</div>
+			<div class="row">    
+				<div class="input-field col s12">
+					<input type='text' id='textInput' required=true>
+					<label for="textInput" >Text</label>
+   				</div>
+    		</div>
+    	</form>
+    </div>
+	<script>
+		  var myDataRef = new Firebase('https://y2om2au5jv8.firebaseio-demo.com/');
+		  $('#textInput').keypress(function (e) {
+            if (e.keyCode == 13 && $('#titleInput').val() != '' && $('#textInput').val() != '') {
+		      var title = $('#titleInput').val();
+		      var text = $('#textInput').val();
+		      myDataRef.push({title: title, text: text});
+		      $('#titleInput').val('');
+		      $('#textInput').val('');
+		    }
+		  });
+		  
+		  myDataRef.on('child_added', function(snapshot) {
+		    var note = snapshot.val();
+		    displayChatMessage(note.title, note.text);
+		  });
+		  function displayChatMessage(title, text) {
+		    $('<div/>').append($('<em/>'+"<strong>Title: </strong>"+title+"<br/>")).appendTo($('#inputs'));
+		    $('<em/>').append("<strong>Text: </strong>"+text).appendTo($('#inputs'));
+		    $('#inputs')[0].scrollTop = $('#inputs')[0].scrollHeight;
+		  };
+    </script>
+  </body>
+</html>
